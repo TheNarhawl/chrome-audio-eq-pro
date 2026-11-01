@@ -50,6 +50,7 @@ body {
   width: 400px;
   height: 600px;
   overflow: hidden;
+  box-sizing: border-box;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12px;
   line-height: 1.4;
@@ -61,11 +62,14 @@ body {
 .app-container {
   position: relative;
   width: 400px;
+  max-width: 400px;
   height: 600px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: 12px;
   gap: 10px;
+  box-sizing: border-box;
 }
 
 /* Иконки */
@@ -402,11 +406,12 @@ input[type="range"]:hover::-webkit-slider-thumb {
 
 .eq-bands-grid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 2px;
   flex: 1;
   align-items: center;
   padding-top: 4px;
+  width: 100%;
 }
 
 .eq-band {
@@ -416,6 +421,7 @@ input[type="range"]:hover::-webkit-slider-thumb {
   justify-content: space-between;
   height: 100%;
   gap: 4px;
+  min-width: 0;
 }
 
 .band-db {
@@ -440,12 +446,30 @@ input[type="range"]:hover::-webkit-slider-thumb {
   min-height: 120px;
 }
 
-/* Вертикальный ползунок без нестандартных appearance-костылей */
 .band-slider {
-  width: 118px !important;
-  height: 6px !important;
-  transform: rotate(-90deg);
-  transform-origin: center;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 16px !important;
+  height: 118px !important;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.band-slider::-webkit-slider-runnable-track {
+  width: 4px;
+  background-color: var(--bg-control);
+  border: 1px solid var(--border-color);
+}
+
+.band-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 10px;
+  background-color: var(--accent);
+  border: 1px solid var(--bg-main);
+  margin-left: -6px;
 }
 
 .band-freq {
