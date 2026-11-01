@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>FlatEQ & Volume Booster</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Верхняя панель -->
+    <header class="topbar">
+      <div class="brand">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 17h2v4H3v-4zm4-7h2v11H7V10zm4-6h2v17h-2V4zm4 9h2v8h-2v-8zm4-4h2v12h-2V9z"/>
+        </svg>
+        <span class="brand-title">FLAT<strong>EQ</strong></span>
+        <span id="captureStatusBadge" class="status-badge">STANDBY</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="releaseBtn" class="icon-btn" title="Отключить перехват звука вкладки" hidden>
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+          </svg>
+        </button>
+        <button id="themeToggleBtn" class="icon-btn" title="Переключить тему (Тёмная / Светлая)">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
+          </svg>
+        </button>
+        <button id="openDrawerBtn" class="flat-btn secondary-btn" title="Пользовательские пресеты">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/>
+          </svg>
+          <span>Пресеты</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Баннер ошибок (например, для chrome:// страниц) -->
+    <div id="errorBanner" class="banner error-banner" hidden></div>
+
+    <!-- Секция 1: Усиление громкости и Лимитер -->
+    <section class="panel gain-panel">
+      <div class="section-header">
+        <span class="section-label">УСИЛЕНИЕ ГРОМКОСТИ</span>
+        <div class="gain-input-group">
+          <input id="gainNumberInput" type="number" min="0" max="1000" step="10" value="100" aria-label="Процент громкости">
+          <span class="unit-label">%</span>
+        </div>
+      </div>
+
+      <div class="gain-slider-row">
+        <input id="gainSlider" type="range" min="0" max="1000" step="5" value="100">
+        <div class="gain-ticks">
+          <button type="button" class="tick-btn" data-gain="100">100%</button>
+          <button type="button" class="tick-btn" data-gain="200">200%</button>
+          <button type="button" class="tick-btn" data-gain="300">300%</button>
+          <button type="button" class="tick-btn" data-gain="500">500%</button>
+          <button type="button" class="tick-btn" data-gain="1000">1000%</button>
+        </div>
+      </div>
+
+      <div class="limiter-row">
+        <label class="checkbox-label">
+          <input id="limiterCheckbox" type="checkbox" checked>
+          <span class="checkbox-box"></span>
+          <span>Защитный лимитер (DynamicsCompressor)</span>
+        </label>
+      </div>
+
+      <div id="clippingWarning" class="banner warning-banner" hidden>
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+        </svg>
+        <span id="clippingWarningText">Усиление > 300%: высокий риск перегрузки и клиппинга звука.</span>
+      </div>
+    </section>
+
+    <!-- Секция 2: Визуализация АЧХ + кривой эквалайзера -->
+    <section class="panel visualizer-panel">
+      <canvas id="spectrumCanvas" width="368" height="92"></canvas>
+      <div class="visualizer-legend">
+        <span>АЧХ (Real-time FFT) + Кривая фильтрации</span>
+        <span id="dbScaleLabel">±12 dB</span>
+      </div>
+    </section>
+
+    <!-- Секция 3: 10-полосный эквалайзер -->
+    <section class="panel eq-panel">
+      <div class="eq-toolbar">
+        <div class="preset-select-group">
+          <label for="builtinPresetSelect" class="section-label">ПРОФИЛЬ EQ:</label>
+          <select id="builtinPresetSelect" class="flat-select">
+            <option value="flat">Flat (По умолчанию)</option>
+            <option value="bass">Bass Boost</option>
+            <option value="vocal">Vocal</option>
+            <option value="rock">Rock</option>
+            <option value="electronic">Electronic</option>
+            <option value="podcast">Podcast / Speech</option>
+            <option value="custom" disabled>Custom (Свой)</option>
+          </select>
+        </div>
+        <button id="resetEqBtn" class="flat-btn secondary-btn" type="button">Сброс 0 dB</button>
+      </div>
+
+      <div id="eqBandsContainer" class="eq-bands-grid">
+        <!-- Полосы генерируются в popup.js -->
+      </div>
+    </section>
+
+    <!-- Выдвижная панель (Side Drawer) для пресетов пользователя -->
+    <div id="drawerBackdrop" class="drawer-backdrop" hidden></div>
+    <aside id="presetsDrawer" class="side-drawer" aria-hidden="true">
+      <div class="drawer-header">
+        <span class="section-label">МОИ ПРЕСЕТЫ (SYNC)</span>
+        <button id="closeDrawerBtn" class="icon-btn" title="Закрыть панель">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+          </svg>
+        </button>
+      </div>
+
+      <form id="savePresetForm" class="save-preset-form">
+        <input id="newPresetNameInput" type="text" maxlength="28" placeholder="Название нового пресета..." required>
+        <button type="submit" class="flat-btn primary-btn">Сохранить</button>
+      </form>
+
+      <div class="drawer-hint">
+        Сохраняет текущее усиление (Gain), статус лимитера и все 10 полос эквалайзера в <code>chrome.storage.sync</code>.
+      </div>
+
+      <ul id="userPresetsList" class="presets-list">
+        <!-- Список пользовательских пресетов -->
+      </ul>
+    </aside>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

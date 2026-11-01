@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "FlatEQ & Volume Booster Pro",
+  "version": "1.0.0",
+  "description": "Усилитель громкости до 1000% с лимитером, 10-полосным эквалайзером и анализатором спектра в реальном времени.",
+  "permissions": [
+    "tabCapture",
+    "offscreen",
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "FlatEQ & Booster"
+  },
+  "minimum_chrome_version": "116"
+}
