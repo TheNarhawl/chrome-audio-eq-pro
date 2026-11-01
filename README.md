@@ -91,7 +91,6 @@ chrome-audio-eq-pro/
 │   ├── icon32.png           # Иконка дисплеев Retina/HiDPI (32x32)
 │   ├── icon48.png           # Иконка страницы расширений (48x48)
 │   └── icon128.png          # Иконка для Chrome Web Store (128x128)
-├── generate-icons.html      # Локальная утилита рендера PNG из SVG
 ├── manifest.json            # Манифест расширения Manifest V3
 ├── service-worker.js        # Координатор захвата, бейджей и жизненного цикла
 ├── offscreen.html           # Хост-контейнер аудиопроцесса
@@ -109,18 +108,11 @@ chrome-audio-eq-pro/
 ### 1. Подготовка файлов
 Склонируйте репозиторий или сохраните файлы проекта в локальную папку:
 ```bash
-git clone https://github.com/your-username/chrome-audio-eq-pro.git
+git clone https://github.com/TheNarhawl/chrome-audio-eq-pro.git
 cd chrome-audio-eq-pro
 ```
 
-### 2. Генерация PNG-иконок
-1. Убедитесь, что файл `icons/icon.svg` находится на месте.
-2. Откройте файл `generate-icons.html` двойным кликом в браузере Chrome.
-3. Нажмите кнопку **«Скачать все иконки (PNG)»**.
-4. Скопируйте полученные файлы `icon16.png`, `icon32.png`, `icon48.png` и `icon128.png` в папку `icons/`.
-5. *(Опционально)* Файл `generate-icons.html` можно удалить после генерации.
-
-### 3. Загрузка в Google Chrome
+### 2. Загрузка в Google Chrome
 1. Откройте браузер и перейдите по адресу:
    ```text
    chrome://extensions/
