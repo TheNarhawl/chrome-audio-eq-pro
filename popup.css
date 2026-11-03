@@ -306,12 +306,12 @@ input[type="range"]:hover::-webkit-slider-thumb {
   border-color: var(--accent);
 }
 
-.checkbox-label input:checked + .checkbox-box {
+.checkbox-label input:checked+.checkbox-box {
   background-color: var(--accent);
   border-color: var(--accent);
 }
 
-.checkbox-label input:checked + .checkbox-box::after {
+.checkbox-label input:checked+.checkbox-box::after {
   content: "";
   position: absolute;
   left: 4px;
@@ -604,4 +604,26 @@ input[type="range"]:hover::-webkit-slider-thumb {
   padding: 24px 12px;
   color: var(--text-muted);
   border: 1px dashed var(--border-color);
+}
+
+
+/* Интерактивное управление точками на Canvas */
+#spectrumCanvas {
+  touch-action: none;
+  cursor: default;
+}
+
+.eq-band.canvas-active .band-freq {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.eq-band.canvas-active .band-db {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.eq-band.canvas-active .band-slider::-webkit-slider-thumb {
+  background-color: var(--accent-hover);
+  border-color: #ffffff;
 }
